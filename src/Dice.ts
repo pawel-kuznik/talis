@@ -28,7 +28,7 @@ export class Dice implements DiceLike {
      *  Roll the number of dice.
      */
     roll() : number {
-        return 1 + (Math.random() % this.sides);
+        return Math.floor(1 + (Math.random() * this.sides));
     }
 
     /**
