@@ -1,4 +1,5 @@
 import { DiceLike } from "./DiceLike";
+import { fixNumber } from "./fixNumber";
 import { ValueDistribution } from "./ValueDistribution";
 
 /**
@@ -17,11 +18,40 @@ export class Dice implements DiceLike {
         this.sides = sides;
     }
     
+    /**
+     *  Get probabilities of all values that a dice can produce.
+     */
     probabilities(): ValueDistribution {
 
-        const raw = Array(this.sides).fill(0).map((() => 1 / this.sides));
+        const raw = Array(this.sides).fill(0).map(((_, idx) => this.probabilityFor(idx + 1)));
 
         return new ValueDistribution(raw);
+    }
+
+    /**
+     *  Probability of rolling a value lower to passed value.
+     */
+    probabilityForLower(x: number) : number {
+        if (x > this.sides) return 1;
+        if (x < 1) return 0;
+        const targetSides = x - 1;
+        return fixNumber(targetSides / this.sides);
+    }
+
+    /**
+     *  Probability of rolling a value higher to passed value.
+     */
+    probabilityForHigher(x: number) : number {
+        const targetSides = this.sides - x;
+        return fixNumber(targetSides / this.sides);
+    }
+
+    /**
+     *  Probability of rolling a value equal to passed value.
+     */
+    probabilityFor(x: number) : number {
+        if (x < 1 || x > this.sides) return 0;
+        return fixNumber(1 / this.sides);
     }
 
     /**

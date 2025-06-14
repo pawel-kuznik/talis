@@ -5,3 +5,5 @@ export * from "./DiceNumericalModifier";
 export * from "./ModifiedDice";
 export * from "./RollSuite";
 export * from "./RollSuiteResult";
+export * from "./ValueDistribution";
+export * from "./MultipleDice";

@@ -4,9 +4,9 @@ import { fixNumber } from "./fixNumber";
 import { ValueDistribution } from "./ValueDistribution";
 
 /**
- *  Advantage dice is when you can roll two dice and take the higher value.
+ *  Disadvantage dice is when you can roll two dice and take the lower value.
  */
-export class AdvantageDice implements DiceLike {
+export class DisadvantageDice implements DiceLike {
 
     private _dice: Dice;
 
@@ -15,11 +15,11 @@ export class AdvantageDice implements DiceLike {
     constructor(dice: Dice) {
         this._dice = dice;
     }
-    
+
     roll(): number {
         const resultA = this._dice.roll();
         const resultB = this._dice.roll();
-        return resultA > resultB ? resultA : resultB;
+        return resultA < resultB ? resultA : resultB;
     }
 
     /**
@@ -28,43 +28,43 @@ export class AdvantageDice implements DiceLike {
     probabilityFor(x: number) : number {
         const baseProbability = this._dice.probabilityFor(x);
 
-        // A probablity for a specific value is a sum of 3 probabilities:
+        // A probability for a specific value is a sum of 3 probabilities:
         // - same value on both dice (baseProbability * baseProbability)
-        // - target balue on dice A and lower value on dice B (baseProbability * this._dice.probabilityForLower(x))
-        // - target value on dice B and lower value on dice A (baseProbability * this._dice.probabilityForLower(x))
-        return fixNumber(2 * (baseProbability * this._dice.probabilityForLower(x)) + baseProbability * baseProbability);
+        // - target value on dice A and higher value on dice B (baseProbability * this._dice.probabilityForHigher(x))
+        // - target value on dice B and higher value on dice A (baseProbability * this._dice.probabilityForHigher(x))
+        return fixNumber(2 * (baseProbability * this._dice.probabilityForHigher(x)) + baseProbability * baseProbability);
     }
 
     /**
      *  Probability of rolling a value higher to passed value.
      */
     probabilityForHigher(x: number): number {
-
-        // A profor a result higher than a specific value is a sum of:
+        
+        // Probability of rolling a value higher to passed value is a sum of:
         // - probability of rolling a value higher than the target value on both dice
-        // - probability of rolling a value higher on dice A and equal on dice B
-        // - probability of rolling a value higher on dice B and equal on dice A
-        // - probability of rolling a value higher on dice A and lower on dice B
-        // - probability of rolling a value higher on dice B and lower on dice A
         return fixNumber(
-            this._dice.probabilityForHigher(x) * this._dice.probabilityForHigher(x) +
-            this._dice.probabilityForHigher(x) * this._dice.probabilityFor(x) +
-            this._dice.probabilityForHigher(x) * this._dice.probabilityFor(x) +
-            this._dice.probabilityForHigher(x) * this._dice.probabilityForLower(x) +
-            this._dice.probabilityForHigher(x) * this._dice.probabilityForLower(x)
-        );
+            this._dice.probabilityForHigher(x) * this._dice.probabilityForHigher(x)
+        )
     }
 
     /**
      *  Probability of rolling a value lower to passed value.
      */
     probabilityForLower(x: number): number {
-
-        // A profor a result higher than a specific value is a sum of:
+    
+        // Probability of rolling a value lower to passed value is a sum of:
         // - probability of rolling a value lower than the target value on both dice
+        // - probability of rolling a value lower on dice A and higher on dice B
+        // - probability of rolling a value lower on dice B and higher on dice A
+        // - probability of rolling a value lower on dice A and equal on dice B
+        // - probability of rolling a value lower on dice B and equal on dice A
         return fixNumber(
+            this._dice.probabilityForLower(x) * this._dice.probabilityForLower(x) +
+            this._dice.probabilityForLower(x) * this._dice.probabilityForHigher(x) +
+            this._dice.probabilityForLower(x) * this._dice.probabilityForHigher(x) +
+            this._dice.probabilityForLower(x) * this._dice.probabilityForLower(x) +
             this._dice.probabilityForLower(x) * this._dice.probabilityForLower(x)
-        );
+        )
     }
 
     /**
@@ -81,6 +81,6 @@ export class AdvantageDice implements DiceLike {
     }
 
     toString(): string {
-        return `${this._dice.toString()}A`;
+        return `${this._dice.toString()}D`;
     }
 }
