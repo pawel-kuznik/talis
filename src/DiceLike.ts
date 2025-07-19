@@ -13,6 +13,11 @@ export interface DiceLike {
     roll(): number;
 
     /**
+     *  The possible values the dice can roll.
+     */
+    possibleValues() : number[]
+
+    /**
      *  Get probabilities of all values that a dice can produce.
      */
     probabilities(): ValueDistribution;

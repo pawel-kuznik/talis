@@ -118,4 +118,14 @@ describe('MultipleDice', () => {
         expect(d6.probabilityForHigher(13)).toBeCloseTo(0, 5);
         expect(d6.probabilityForLower(13)).toBeCloseTo(1, 5);
     });
+
+    it('should return correct possible values', () => {
+        const d6_2 = new MultipleDice(new Dice(6), 2);
+        const possibleValues = d6_2.possibleValues();
+        
+        expect(possibleValues).toEqual([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+        expect(possibleValues.length).toEqual(11);
+        expect(possibleValues[0]).toEqual(2); // minimum
+        expect(possibleValues[possibleValues.length - 1]).toEqual(12); // maximum
+    });
 }); 

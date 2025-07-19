@@ -82,4 +82,12 @@ describe('DisadvantageDice', () => {
 
         expect(probabilities.total).toEqual(1);
     });
+
+    it('should return correct possible values', () => {
+        const d6 = new DisadvantageDice(new Dice(6));
+        const possibleValues = d6.possibleValues();
+        
+        expect(possibleValues).toEqual([1, 2, 3, 4, 5, 6]);
+        expect(possibleValues.length).toEqual(6);
+    });
 }); 

@@ -13,6 +13,15 @@ export class MultipleDice implements DiceLike {
     }
 
     /**
+     *  The possible values the dice can roll.
+     */
+    possibleValues(): number[] {
+        const minValue = this._count;
+        const maxValue = this._count * this._dice.sides;
+        return Array.from({length: maxValue - minValue + 1}, (_, i) => minValue + i);
+    }
+
+    /**
      *  Roll the dice.
      */
     roll(): number {

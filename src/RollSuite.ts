@@ -1,5 +1,4 @@
 import { DiceLike } from "./DiceLike";
-import { fixNumber } from "./fixNumber";
 import { RollSuiteResult } from "./RollSuiteResult";
 import { ValueDistribution } from "./ValueDistribution";
 

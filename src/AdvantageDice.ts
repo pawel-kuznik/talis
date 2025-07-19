@@ -15,6 +15,13 @@ export class AdvantageDice implements DiceLike {
     constructor(dice: Dice) {
         this._dice = dice;
     }
+
+    /**
+     *  The possible values the dice can roll.
+     */
+    possibleValues(): number[] {
+        return this._dice.possibleValues();
+    }
     
     roll(): number {
         const resultA = this._dice.roll();

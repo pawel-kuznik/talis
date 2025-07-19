@@ -55,6 +55,13 @@ export class Dice implements DiceLike {
     }
 
     /**
+     *  The possible values the dice can roll.
+     */
+    possibleValues(): number[] {
+        return Array.from({length: this.sides}, (_, i) => i + 1);
+    }
+
+    /**
      *  Roll the number of dice.
      */
     roll() : number {

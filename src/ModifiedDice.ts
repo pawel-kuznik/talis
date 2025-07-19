@@ -22,41 +22,65 @@ export class ModifiedDice implements DiceLike {
     get sides() : number { return this._dice.sides; };
 
     /**
+     *  The possible values the dice can roll.
+     */
+    possibleValues(): number[] {
+        return this._dice.possibleValues().map(value => this._modifier.modify(value));
+    }
+
+    /**
      *  Get probabilities of all values that a dice can produce.
      */
     probabilities(): ValueDistribution {
+        const modifiedValues = this.possibleValues();
+        const minValue = Math.min(...modifiedValues);
+        const maxValue = Math.max(...modifiedValues);
+        const probabilities: number[] = [];
 
-        const raw = Array(this.sides).fill(0).map((() => 1 / this.sides));
+        for (let value = minValue; value <= maxValue; value++) {
+            probabilities.push(this.probabilityFor(value));
+        }
 
-        // @todo fix modifier
-        return new ValueDistribution(raw, 0);
+        return new ValueDistribution(probabilities, minValue - 1);
     }
 
     /**
      *  Probability of rolling a value equal to passed value.
      */
     probabilityFor(x: number) : number {
-
-        // TODO: implement
-        return 0;
+        let probability = 0;
+        for (const originalValue of this._dice.possibleValues()) {
+            if (this._modifier.modify(originalValue) === x) {
+                probability += this._dice.probabilityFor(originalValue);
+            }
+        }
+        return probability;
     }
 
     /**
      *  Probability of rolling a value lower to passed value.
      */
     probabilityForLower(x: number) : number {
-
-        // TODO: implement
-        return 0;
+        let probability = 0;
+        for (const originalValue of this._dice.possibleValues()) {
+            if (this._modifier.modify(originalValue) < x) {
+                probability += this._dice.probabilityFor(originalValue);
+            }
+        }
+        return probability;
     }
 
     /**
      *  Probability of rolling a value higher to passed value.
      */
     probabilityForHigher(x: number) : number {
-
-        // TODO: implement
-        return 0;
+        let probability = 0;
+        for (const originalValue of this._dice.possibleValues()) {
+            if (this._modifier.modify(originalValue) > x) {
+                probability += this._dice.probabilityFor(originalValue);
+            }
+        }
+        return probability;
     }
 
     /**
